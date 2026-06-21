@@ -332,7 +332,11 @@ function SolenaSite() {
         },
       });
 
-      // Ecosystem orbit pulse on pin
+      // Ecosystem orbit pulse on pin + active node cycling
+      const ecoNodes = gsap.utils.toArray<HTMLElement>("[data-eco-node]");
+      const activeLabel = document.querySelector<HTMLElement>(
+        "[data-eco-active]",
+      );
       ScrollTrigger.create({
         trigger: ".section-ecosystem",
         start: "top top",
@@ -341,10 +345,47 @@ function SolenaSite() {
         onUpdate: (self) => {
           const p = self.progress;
           gsap.set(".ecosystem-stage", {
-            scale: 1 + p * 0.25,
-            rotation: p * 30,
+            scale: 1 + p * 0.12,
+            rotation: p * 14,
           });
+          if (ecoNodes.length) {
+            const idx = Math.min(
+              ecoNodes.length - 1,
+              Math.floor(p * ecoNodes.length),
+            );
+            ecoNodes.forEach((n, i) => {
+              n.classList.toggle("is-active", i === idx);
+            });
+            if (activeLabel) {
+              activeLabel.textContent =
+                ecoNodes[idx].getAttribute("data-eco-node") || "";
+            }
+          }
         },
+      });
+
+      // Section tracker — highlight active section in right rail
+      const trackerSections =
+        gsap.utils.toArray<HTMLElement>("[data-section]");
+      trackerSections.forEach((sec) => {
+        ScrollTrigger.create({
+          trigger: sec,
+          start: "top 50%",
+          end: "bottom 50%",
+          onToggle: (self) => {
+            if (self.isActive) {
+              const id = sec.getAttribute("data-section");
+              document
+                .querySelectorAll<HTMLElement>("[data-tracker-item]")
+                .forEach((el) => {
+                  el.classList.toggle(
+                    "is-active",
+                    el.getAttribute("data-tracker-item") === id,
+                  );
+                });
+            }
+          },
+        });
       });
 
       // Wordmark dust dissolve
@@ -365,15 +406,17 @@ function SolenaSite() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative text-ivory">
+    <div ref={rootRef} className="relative overflow-x-clip text-ivory">
       <EnvironmentCanvas />
       <NavBar />
+      <ScrollTracker />
 
       {/* All content sits above the environment. No section frames an image. */}
       <main className="relative z-10">
         {/* ---------- HERO ---------- */}
         <section
           data-zone="hero"
+          data-section="hero"
           className="relative flex flex-col items-center justify-center px-6 text-center"
           style={{ minHeight: "120vh" }}
         >
@@ -412,6 +455,7 @@ function SolenaSite() {
         <section
           id="thesis"
           data-zone="manifesto"
+          data-section="thesis"
           className="relative px-6 py-[18rem] md:px-12"
         >
           <div className="relative mx-auto max-w-5xl">
@@ -445,6 +489,7 @@ function SolenaSite() {
         {/* ---------- WHAT WE BUILD ---------- */}
         <section
           data-zone="fragments"
+          data-section="disciplines"
           className="relative px-6 py-40 md:px-12"
         >
           <div className="mx-auto max-w-7xl">
@@ -498,58 +543,12 @@ function SolenaSite() {
         </section>
 
         {/* ---------- ECOSYSTEM ---------- */}
-        <section
-          data-zone="ecosystem"
-          className="section-ecosystem relative h-[160vh]"
-        >
-          <div className="sticky top-0 flex h-screen w-full items-center justify-center">
-            <div className="ecosystem-stage relative aspect-square w-[min(90vw,42rem)]">
-              <div className="orbit-ring orbit-slow" />
-              <div className="orbit-ring orbit-mid scale-75" />
-              <div className="orbit-ring orbit-fast scale-50" />
-
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                <div className="font-display text-3xl tracking-[0.3em] text-ivory">
-                  SOLENA
-                </div>
-                <div className="eyebrow mt-2">Core</div>
-              </div>
-
-              {[
-                "Real Estate",
-                "Hospitality",
-                "Luxury",
-                "Media",
-                "Capital",
-                "Culture",
-              ].map((node, i, arr) => {
-                const angle = (i / arr.length) * Math.PI * 2;
-                const r = 46;
-                const x = 50 + Math.cos(angle) * r;
-                const y = 50 + Math.sin(angle) * r;
-                return (
-                  <div
-                    key={node}
-                    className="absolute -translate-x-1/2 -translate-y-1/2"
-                    style={{ left: `${x}%`, top: `${y}%` }}
-                  >
-                    <div className="glass flex h-24 w-24 items-center justify-center rounded-full px-2 text-center text-[0.7rem] uppercase tracking-[0.18em] text-ivory/90 backdrop-blur-xl">
-                      {node}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="eyebrow absolute bottom-12 left-1/2 -translate-x-1/2">
-              III — The Ecosystem
-            </p>
-          </div>
-        </section>
+        <Ecosystem />
 
         {/* ---------- STANDARD ---------- */}
         <section
           data-zone="standard"
+          data-section="standard"
           className="relative px-6 py-[18rem] md:px-12"
         >
           <div className="mx-auto max-w-4xl text-center">
@@ -573,6 +572,7 @@ function SolenaSite() {
          */}
         <section
           data-zone="transformations"
+          data-section="transformations"
           className="relative px-6 py-40 md:px-12"
         >
           <div className="mx-auto max-w-6xl">
@@ -620,7 +620,7 @@ function SolenaSite() {
         </section>
 
         {/* ---------- JOURNAL ---------- */}
-        <section className="relative px-6 py-40 md:px-12">
+        <section data-section="journal" className="relative px-6 py-40 md:px-12">
           <div className="mx-auto max-w-7xl">
             <div className="mb-20 flex items-end justify-between">
               <p className="eyebrow">VI — The Journal</p>
@@ -668,7 +668,7 @@ function SolenaSite() {
         </section>
 
         {/* ---------- FUTURE ---------- */}
-        <section data-zone="future" className="relative h-[130vh]">
+        <section data-zone="future" data-section="future" className="relative h-[130vh]">
           <div className="sticky top-0 flex h-screen w-full items-center justify-center">
             <div className="relative z-10 px-6 text-center">
               <p className="eyebrow mb-12">VII — The Future</p>
@@ -688,6 +688,7 @@ function SolenaSite() {
         {/* ---------- INVITATION ---------- */}
         <section
           data-zone="invitation"
+          data-section="invitation"
           className="relative px-6 py-40 md:px-12"
         >
           <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
@@ -786,5 +787,146 @@ function Footer() {
         </p>
       </div>
     </footer>
+  );
+}
+
+/* ---------- ECOSYSTEM ----------
+ * Split editorial layout. Left: prose + active sector. Right: orbital diagram.
+ * Stacks on mobile, side-by-side from md.
+ */
+const ECO_NODES = [
+  "Real Estate",
+  "Technology",
+  "Hospitality",
+  "Luxury",
+  "Media",
+  "Ventures",
+  "Culture",
+  "Capital",
+];
+
+function Ecosystem() {
+  return (
+    <section
+      data-zone="ecosystem"
+      data-section="ecosystem"
+      className="section-ecosystem relative h-[220vh]"
+    >
+      <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden px-4 sm:px-6 md:px-12">
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 md:grid-cols-[1fr_1.1fr] md:gap-12">
+          {/* Left — editorial copy */}
+          <div className="relative z-10 max-w-md md:pr-6">
+            <p className="eyebrow mb-6 md:mb-10">III — The Ecosystem</p>
+            <p className="font-display text-2xl font-light leading-[1.25] text-ivory sm:text-3xl md:text-4xl">
+              Solena sits at the center of converging sectors, where brand,
+              built environment, culture, capital, and narrative architecture
+              begin to move as a single field.
+            </p>
+            <p className="mt-8 text-xs uppercase tracking-[0.35em] text-stone/70">
+              Active sector ·{" "}
+              <span
+                data-eco-active
+                className="font-signature text-sm italic tracking-normal text-bronze-glow"
+              >
+                Real Estate
+              </span>
+            </p>
+          </div>
+
+          {/* Right — orbital diagram */}
+          <div className="relative mx-auto aspect-square w-full max-w-[min(92vw,38rem)]">
+            <div className="ecosystem-stage absolute inset-0">
+              <div className="orbit-ring orbit-slow" />
+              <div className="orbit-ring orbit-mid absolute inset-[10%]" />
+              <div className="orbit-ring orbit-fast absolute inset-[22%]" />
+
+              {/* Core */}
+              <div className="absolute left-1/2 top-1/2 flex h-[34%] w-[34%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full">
+                <div className="absolute inset-0 rounded-full bg-obsidian/70 backdrop-blur-2xl" />
+                <div
+                  className="absolute inset-0 rounded-full border border-ivory/10"
+                  style={{
+                    boxShadow:
+                      "0 0 60px rgba(184,134,73,0.18), inset 0 0 40px rgba(0,0,0,0.6)",
+                  }}
+                />
+                <span className="relative font-signature text-xl tracking-[0.22em] text-ivory sm:text-2xl md:text-3xl">
+                  SOLENA
+                </span>
+              </div>
+
+              {/* Nodes */}
+              {ECO_NODES.map((node, i, arr) => {
+                const angle = (i / arr.length) * Math.PI * 2 - Math.PI / 2;
+                const r = 44;
+                const x = 50 + Math.cos(angle) * r;
+                const y = 50 + Math.sin(angle) * r;
+                return (
+                  <div
+                    key={node}
+                    data-eco-node={node}
+                    className="eco-node absolute -translate-x-1/2 -translate-y-1/2"
+                    style={{ left: `${x}%`, top: `${y}%` }}
+                  >
+                    <div className="eco-node-disc relative flex h-[clamp(3.5rem,11vw,6rem)] w-[clamp(3.5rem,11vw,6rem)] items-center justify-center rounded-full text-center text-[clamp(0.55rem,1.3vw,0.78rem)] font-light leading-tight tracking-[0.04em] text-ivory/85">
+                      <div className="absolute inset-0 rounded-full bg-ivory/[0.035] backdrop-blur-xl" />
+                      <div className="absolute inset-0 rounded-full border border-ivory/10" />
+                      <span className="relative px-1">{node}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- SCROLL TRACKER ----------
+ * Fixed right rail: section label + hairline ticks + "↓ to navigate".
+ */
+const TRACKER_SECTIONS = [
+  { id: "hero", label: "Prologue" },
+  { id: "thesis", label: "The Thesis" },
+  { id: "disciplines", label: "What We Build" },
+  { id: "ecosystem", label: "The Ecosystem" },
+  { id: "standard", label: "The Standard" },
+  { id: "transformations", label: "Transformations" },
+  { id: "journal", label: "The Journal" },
+  { id: "future", label: "The Future" },
+  { id: "invitation", label: "Invitation" },
+];
+
+function ScrollTracker() {
+  return (
+    <aside
+      aria-hidden
+      className="pointer-events-none fixed right-2 top-1/2 z-40 hidden -translate-y-1/2 select-none flex-col items-end gap-6 md:flex lg:right-5"
+    >
+      <div className="flex flex-col items-end gap-[6px]">
+        {TRACKER_SECTIONS.map((s, i) => (
+          <div
+            key={s.id}
+            data-tracker-item={s.id}
+            className={`tracker-row group flex items-center gap-3 ${
+              i === 0 ? "is-active" : ""
+            }`}
+          >
+            <span className="tracker-label whitespace-nowrap font-signature text-[0.7rem] italic text-ivory/80 opacity-0 transition-opacity">
+              <span className="mr-2 text-stone/60">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {s.label}
+            </span>
+            <span className="tracker-tick block h-[1px] bg-ivory/30 transition-all" />
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col items-center gap-2 text-[0.5rem] uppercase tracking-[0.45em] text-stone/50 [writing-mode:vertical-rl]">
+        <span>↑ ↓ to navigate</span>
+      </div>
+    </aside>
   );
 }
