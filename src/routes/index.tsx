@@ -332,7 +332,11 @@ function SolenaSite() {
         },
       });
 
-      // Ecosystem orbit pulse on pin
+      // Ecosystem orbit pulse on pin + active node cycling
+      const ecoNodes = gsap.utils.toArray<HTMLElement>("[data-eco-node]");
+      const activeLabel = document.querySelector<HTMLElement>(
+        "[data-eco-active]",
+      );
       ScrollTrigger.create({
         trigger: ".section-ecosystem",
         start: "top top",
@@ -341,10 +345,47 @@ function SolenaSite() {
         onUpdate: (self) => {
           const p = self.progress;
           gsap.set(".ecosystem-stage", {
-            scale: 1 + p * 0.25,
-            rotation: p * 30,
+            scale: 1 + p * 0.12,
+            rotation: p * 14,
           });
+          if (ecoNodes.length) {
+            const idx = Math.min(
+              ecoNodes.length - 1,
+              Math.floor(p * ecoNodes.length),
+            );
+            ecoNodes.forEach((n, i) => {
+              n.classList.toggle("is-active", i === idx);
+            });
+            if (activeLabel) {
+              activeLabel.textContent =
+                ecoNodes[idx].getAttribute("data-eco-node") || "";
+            }
+          }
         },
+      });
+
+      // Section tracker — highlight active section in right rail
+      const trackerSections =
+        gsap.utils.toArray<HTMLElement>("[data-section]");
+      trackerSections.forEach((sec) => {
+        ScrollTrigger.create({
+          trigger: sec,
+          start: "top 50%",
+          end: "bottom 50%",
+          onToggle: (self) => {
+            if (self.isActive) {
+              const id = sec.getAttribute("data-section");
+              document
+                .querySelectorAll<HTMLElement>("[data-tracker-item]")
+                .forEach((el) => {
+                  el.classList.toggle(
+                    "is-active",
+                    el.getAttribute("data-tracker-item") === id,
+                  );
+                });
+            }
+          },
+        });
       });
 
       // Wordmark dust dissolve
