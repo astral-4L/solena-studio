@@ -406,15 +406,17 @@ function SolenaSite() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative text-ivory">
+    <div ref={rootRef} className="relative overflow-x-clip text-ivory">
       <EnvironmentCanvas />
       <NavBar />
+      <ScrollTracker />
 
       {/* All content sits above the environment. No section frames an image. */}
       <main className="relative z-10">
         {/* ---------- HERO ---------- */}
         <section
           data-zone="hero"
+          data-section="hero"
           className="relative flex flex-col items-center justify-center px-6 text-center"
           style={{ minHeight: "120vh" }}
         >
