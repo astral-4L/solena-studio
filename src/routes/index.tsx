@@ -455,6 +455,7 @@ function SolenaSite() {
         <section
           id="thesis"
           data-zone="manifesto"
+          data-section="thesis"
           className="relative px-6 py-[18rem] md:px-12"
         >
           <div className="relative mx-auto max-w-5xl">
@@ -488,6 +489,7 @@ function SolenaSite() {
         {/* ---------- WHAT WE BUILD ---------- */}
         <section
           data-zone="fragments"
+          data-section="disciplines"
           className="relative px-6 py-40 md:px-12"
         >
           <div className="mx-auto max-w-7xl">
@@ -541,58 +543,12 @@ function SolenaSite() {
         </section>
 
         {/* ---------- ECOSYSTEM ---------- */}
-        <section
-          data-zone="ecosystem"
-          className="section-ecosystem relative h-[160vh]"
-        >
-          <div className="sticky top-0 flex h-screen w-full items-center justify-center">
-            <div className="ecosystem-stage relative aspect-square w-[min(90vw,42rem)]">
-              <div className="orbit-ring orbit-slow" />
-              <div className="orbit-ring orbit-mid scale-75" />
-              <div className="orbit-ring orbit-fast scale-50" />
-
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                <div className="font-display text-3xl tracking-[0.3em] text-ivory">
-                  SOLENA
-                </div>
-                <div className="eyebrow mt-2">Core</div>
-              </div>
-
-              {[
-                "Real Estate",
-                "Hospitality",
-                "Luxury",
-                "Media",
-                "Capital",
-                "Culture",
-              ].map((node, i, arr) => {
-                const angle = (i / arr.length) * Math.PI * 2;
-                const r = 46;
-                const x = 50 + Math.cos(angle) * r;
-                const y = 50 + Math.sin(angle) * r;
-                return (
-                  <div
-                    key={node}
-                    className="absolute -translate-x-1/2 -translate-y-1/2"
-                    style={{ left: `${x}%`, top: `${y}%` }}
-                  >
-                    <div className="glass flex h-24 w-24 items-center justify-center rounded-full px-2 text-center text-[0.7rem] uppercase tracking-[0.18em] text-ivory/90 backdrop-blur-xl">
-                      {node}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="eyebrow absolute bottom-12 left-1/2 -translate-x-1/2">
-              III — The Ecosystem
-            </p>
-          </div>
-        </section>
+        <Ecosystem />
 
         {/* ---------- STANDARD ---------- */}
         <section
           data-zone="standard"
+          data-section="standard"
           className="relative px-6 py-[18rem] md:px-12"
         >
           <div className="mx-auto max-w-4xl text-center">
