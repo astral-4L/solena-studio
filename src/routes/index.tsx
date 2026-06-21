@@ -688,6 +688,7 @@ function SolenaSite() {
         {/* ---------- INVITATION ---------- */}
         <section
           data-zone="invitation"
+          data-section="invitation"
           className="relative px-6 py-40 md:px-12"
         >
           <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
