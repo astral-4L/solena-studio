@@ -890,7 +890,15 @@ function Ecosystem() {
     >
       <div className="sticky top-0 flex h-screen w-full items-center overflow-hidden">
         {/* MOBILE / TABLET — half-orbit anchored to the right */}
-        <div className="relative flex h-full w-full flex-col justify-end px-4 pb-16 sm:px-6 md:hidden">
+        <div className="relative flex h-full w-full flex-col justify-end px-4 pb-12 sm:px-6 lg:hidden">
+          {/* Bottom fade so the copy stays legible over the bottom of the orbit */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[45vh]"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(6,6,6,0) 0%, rgba(6,6,6,0.72) 55%, rgba(6,6,6,0.92) 100%)",
+            }}
+          />
           {/* Half-orbit stage: 60vw wide, 80vh tall; orbit center sits at the
               right edge of the stage, with SOLENA fully visible inside the viewport. */}
           <div
