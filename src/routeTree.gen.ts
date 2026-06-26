@@ -14,6 +14,7 @@ import { Route as JournalRouteImport } from './routes/journal'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SectorsSectorRouteImport } from './routes/sectors.$sector'
 
 const ThesisRoute = ThesisRouteImport.update({
   id: '/thesis',
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SectorsSectorRoute = SectorsSectorRouteImport.update({
+  id: '/sectors/$sector',
+  path: '/sectors/$sector',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/ecosystem': typeof EcosystemRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/sectors/$sector': typeof SectorsSectorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/ecosystem': typeof EcosystemRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/sectors/$sector': typeof SectorsSectorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,33 @@ export interface FileRoutesById {
   '/ecosystem': typeof EcosystemRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/sectors/$sector': typeof SectorsSectorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contact' | '/ecosystem' | '/journal' | '/thesis'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/ecosystem'
+    | '/journal'
+    | '/thesis'
+    | '/sectors/$sector'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contact' | '/ecosystem' | '/journal' | '/thesis'
-  id: '__root__' | '/' | '/contact' | '/ecosystem' | '/journal' | '/thesis'
+  to:
+    | '/'
+    | '/contact'
+    | '/ecosystem'
+    | '/journal'
+    | '/thesis'
+    | '/sectors/$sector'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/ecosystem'
+    | '/journal'
+    | '/thesis'
+    | '/sectors/$sector'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +105,7 @@ export interface RootRouteChildren {
   EcosystemRoute: typeof EcosystemRoute
   JournalRoute: typeof JournalRoute
   ThesisRoute: typeof ThesisRoute
+  SectorsSectorRoute: typeof SectorsSectorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sectors/$sector': {
+      id: '/sectors/$sector'
+      path: '/sectors/$sector'
+      fullPath: '/sectors/$sector'
+      preLoaderRoute: typeof SectorsSectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   EcosystemRoute: EcosystemRoute,
   JournalRoute: JournalRoute,
   ThesisRoute: ThesisRoute,
+  SectorsSectorRoute: SectorsSectorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
