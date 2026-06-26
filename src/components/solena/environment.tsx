@@ -1,6 +1,8 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollTracker } from "@/components/solena/tracker";
+
 
 export type Stratum = {
   id: string;
@@ -246,6 +248,7 @@ export function SolenaPage({
       className={`relative overflow-x-clip text-ivory ${className}`}
     >
       {children}
+      <ScrollTracker />
     </div>
   );
 }
