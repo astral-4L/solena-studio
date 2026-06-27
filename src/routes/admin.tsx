@@ -143,7 +143,7 @@ function AdminLayout() {
               {nav.map((n) => {
                 const active = isActive(n.to, n.exact);
                 return (
-                  <Link key={n.to} to={n.to} className={`shrink-0 rounded px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.3em] ${active ? "bg-ivory/10 text-ivory" : "text-stone/60"}`}>
+                  <Link key={n.to} to={n.to as "/admin"} className={`shrink-0 rounded px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.3em] ${active ? "bg-ivory/10 text-ivory" : "text-stone/60"}`}>
                     {n.label}
                   </Link>
                 );

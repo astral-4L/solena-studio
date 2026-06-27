@@ -1,4 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
 
 import resonancePortrait from "@/assets/resonance-portrait.png.asset.json";
 import viePortrait2 from "@/assets/vie-portrait-2.png.asset.json";
@@ -106,56 +111,7 @@ function ContactPage() {
           className="relative px-6 py-32 md:px-12"
         >
           <div className="mx-auto grid max-w-6xl gap-16 md:grid-cols-[1.1fr_1fr]">
-            <form
-              className="glass space-y-8 p-8 md:p-12"
-              onSubmit={(e) => {
-                e.preventDefault();
-                window.location.href = "mailto:studio@solena.co";
-              }}
-            >
-              {[
-                { id: "name", label: "Name", type: "text" },
-                { id: "org", label: "Organization", type: "text" },
-                { id: "email", label: "Email", type: "email" },
-              ].map((f) => (
-                <div key={f.id}>
-                  <label
-                    htmlFor={f.id}
-                    className="block text-[0.6rem] uppercase tracking-[0.4em] text-stone/60"
-                  >
-                    {f.label}
-                  </label>
-                  <input
-                    id={f.id}
-                    type={f.type}
-                    required
-                    className="mt-3 w-full border-b border-ivory/15 bg-transparent pb-3 font-display text-xl font-light text-ivory placeholder:text-stone/40 focus:border-bronze-glow focus:outline-none"
-                  />
-                </div>
-              ))}
-              <div>
-                <label
-                  htmlFor="msg"
-                  className="block text-[0.6rem] uppercase tracking-[0.4em] text-stone/60"
-                >
-                  Intent
-                </label>
-                <textarea
-                  id="msg"
-                  rows={5}
-                  required
-                  className="mt-3 w-full resize-none border-b border-ivory/15 bg-transparent pb-3 font-display text-lg font-light text-ivory placeholder:text-stone/40 focus:border-bronze-glow focus:outline-none"
-                  placeholder="What are you building?"
-                />
-              </div>
-              <button
-                type="submit"
-                className="bronze-line inline-flex items-center gap-4 border-b border-stone/30 pb-2 text-xs uppercase tracking-[0.45em] text-ivory transition-colors duration-700 hover:text-bronze-glow"
-              >
-                <span>Send Correspondence</span>
-                <span aria-hidden className="text-bronze">→</span>
-              </button>
-            </form>
+            <ContactForm />
 
             <aside className="space-y-10">
               <div>
