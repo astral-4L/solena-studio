@@ -55,6 +55,60 @@ function AdminLayout() {
     };
   }, [navigate]);
 
+  const qc = useQueryClient();
+  const [unread, setUnread] = useState(0);
+  const [notifEnabled, setNotifEnabled] = useState<boolean>(
+    typeof window !== "undefined" && "Notification" in window
+      ? Notification.permission === "granted"
+      : false,
+  );
+
+  // Realtime: contact_submissions inserts
+  useEffect(() => {
+    if (state.status !== "ok") return;
+    const channel = supabase
+      .channel("admin-contact-submissions")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "contact_submissions" },
+        (payload) => {
+          const row = payload.new as { name?: string; email?: string; message?: string };
+          setUnread((n) => n + 1);
+          toast(`New submission · ${row.name ?? "Anonymous"}`, {
+            description: row.message?.slice(0, 110) ?? row.email,
+            action: { label: "Open", onClick: () => navigate({ to: "/admin/submissions" }) },
+          });
+          if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+            try {
+              new Notification("New SOLENA submission", {
+                body: `${row.name ?? "Anonymous"} — ${(row.message ?? "").slice(0, 120)}`,
+                tag: "solena-submission",
+              });
+            } catch { /* noop */ }
+          }
+          qc.invalidateQueries({ queryKey: ["submissions"] });
+          qc.invalidateQueries({ queryKey: ["admin-overview"] });
+        },
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [state.status, navigate, qc]);
+
+  // Clear unread badge when on submissions
+  useEffect(() => {
+    if (pathname.startsWith("/admin/submissions")) setUnread(0);
+  }, [pathname]);
+
+  async function enableNotifications() {
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      toast.error("Browser notifications not supported");
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    setNotifEnabled(perm === "granted");
+    if (perm === "granted") toast.success("Desktop notifications enabled");
+  }
+
   async function signOut() {
     await supabase.auth.signOut();
     navigate({ to: "/auth" });
