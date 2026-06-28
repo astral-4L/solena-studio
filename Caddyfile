@@ -19,10 +19,22 @@
 
 	header {
 		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
 		-Server
 	}
 
-	# Pre-rendered static output from `vite build` (nitro preset: static).
+	# Long cache for hashed build assets (Vite emits content-hashed filenames).
+	@assets path /_build/* /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# Long cache for static media (images, video, fonts).
+	@media path *.png *.jpg *.jpeg *.webp *.avif *.gif *.svg *.ico *.mp4 *.webm *.woff *.woff2 *.ttf *.otf
+	header @media Cache-Control "public, max-age=31536000, immutable"
+
+	# HTML must revalidate so deploys roll out immediately.
+	@html path *.html /
+	header @html Cache-Control "public, max-age=0, must-revalidate"
+
 	root * /app/dist/server
 
 	file_server {
@@ -32,6 +44,5 @@
 
 	encode { gzip zstd }
 
-	# SPA-style fallback: try the file, then folder index, then root index.
 	try_files {path} {path}.html {path}/index.html /index.html
 }

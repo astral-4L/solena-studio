@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Inbox, BarChart3, Users, LogOut } from "lucide-react";
+import { LayoutDashboard, Inbox, BarChart3, Users, LogOut, Bell, BellOff } from "lucide-react";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -52,6 +54,60 @@ function AdminLayout() {
       sub.subscription.unsubscribe();
     };
   }, [navigate]);
+
+  const qc = useQueryClient();
+  const [unread, setUnread] = useState(0);
+  const [notifEnabled, setNotifEnabled] = useState<boolean>(
+    typeof window !== "undefined" && "Notification" in window
+      ? Notification.permission === "granted"
+      : false,
+  );
+
+  // Realtime: contact_submissions inserts
+  useEffect(() => {
+    if (state.status !== "ok") return;
+    const channel = supabase
+      .channel("admin-contact-submissions")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "contact_submissions" },
+        (payload) => {
+          const row = payload.new as { name?: string; email?: string; message?: string };
+          setUnread((n) => n + 1);
+          toast(`New submission · ${row.name ?? "Anonymous"}`, {
+            description: row.message?.slice(0, 110) ?? row.email,
+            action: { label: "Open", onClick: () => navigate({ to: "/admin/submissions" }) },
+          });
+          if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+            try {
+              new Notification("New SOLENA submission", {
+                body: `${row.name ?? "Anonymous"} — ${(row.message ?? "").slice(0, 120)}`,
+                tag: "solena-submission",
+              });
+            } catch { /* noop */ }
+          }
+          qc.invalidateQueries({ queryKey: ["submissions"] });
+          qc.invalidateQueries({ queryKey: ["admin-overview"] });
+        },
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [state.status, navigate, qc]);
+
+  // Clear unread badge when on submissions
+  useEffect(() => {
+    if (pathname.startsWith("/admin/submissions")) setUnread(0);
+  }, [pathname]);
+
+  async function enableNotifications() {
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      toast.error("Browser notifications not supported");
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    setNotifEnabled(perm === "granted");
+    if (perm === "granted") toast.success("Desktop notifications enabled");
+  }
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -107,6 +163,7 @@ function AdminLayout() {
             {nav.map((n) => {
               const Icon = n.icon;
               const active = isActive(n.to, n.exact);
+              const showBadge = n.to === "/admin/submissions" && unread > 0;
               return (
                 <Link
                   key={n.to}
@@ -116,13 +173,26 @@ function AdminLayout() {
                   }`}
                 >
                   <Icon size={15} />
-                  {n.label}
+                  <span className="flex-1">{n.label}</span>
+                  {showBadge && (
+                    <span className="rounded-full bg-bronze-glow/90 px-1.5 py-0.5 text-[0.6rem] font-medium text-obsidian">
+                      {unread}
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
           <div className="mt-10 border-t border-ivory/10 pt-6">
-            <p className="text-[0.6rem] uppercase tracking-[0.35em] text-stone/40">Signed in</p>
+            <button
+              onClick={enableNotifications}
+              className="flex w-full items-center gap-2 text-[0.6rem] uppercase tracking-[0.35em] text-stone/60 hover:text-bronze-glow"
+              title={notifEnabled ? "Desktop notifications enabled" : "Enable desktop notifications"}
+            >
+              {notifEnabled ? <Bell size={13} className="text-bronze-glow" /> : <BellOff size={13} />}
+              {notifEnabled ? "Alerts on" : "Enable alerts"}
+            </button>
+            <p className="mt-6 text-[0.6rem] uppercase tracking-[0.35em] text-stone/40">Signed in</p>
             <p className="mt-1 truncate text-sm text-ivory">{state.email}</p>
             <button onClick={signOut} className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-stone/60 hover:text-bronze-glow">
               <LogOut size={13} /> Sign out
