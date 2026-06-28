@@ -163,6 +163,7 @@ function AdminLayout() {
             {nav.map((n) => {
               const Icon = n.icon;
               const active = isActive(n.to, n.exact);
+              const showBadge = n.to === "/admin/submissions" && unread > 0;
               return (
                 <Link
                   key={n.to}
@@ -172,13 +173,26 @@ function AdminLayout() {
                   }`}
                 >
                   <Icon size={15} />
-                  {n.label}
+                  <span className="flex-1">{n.label}</span>
+                  {showBadge && (
+                    <span className="rounded-full bg-bronze-glow/90 px-1.5 py-0.5 text-[0.6rem] font-medium text-obsidian">
+                      {unread}
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
           <div className="mt-10 border-t border-ivory/10 pt-6">
-            <p className="text-[0.6rem] uppercase tracking-[0.35em] text-stone/40">Signed in</p>
+            <button
+              onClick={enableNotifications}
+              className="flex w-full items-center gap-2 text-[0.6rem] uppercase tracking-[0.35em] text-stone/60 hover:text-bronze-glow"
+              title={notifEnabled ? "Desktop notifications enabled" : "Enable desktop notifications"}
+            >
+              {notifEnabled ? <Bell size={13} className="text-bronze-glow" /> : <BellOff size={13} />}
+              {notifEnabled ? "Alerts on" : "Enable alerts"}
+            </button>
+            <p className="mt-6 text-[0.6rem] uppercase tracking-[0.35em] text-stone/40">Signed in</p>
             <p className="mt-1 truncate text-sm text-ivory">{state.email}</p>
             <button onClick={signOut} className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-stone/60 hover:text-bronze-glow">
               <LogOut size={13} /> Sign out
