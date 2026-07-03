@@ -311,121 +311,127 @@ export function OrbitalEcosystem({ id = "ecosystem" }: { id?: string }) {
       data-zone={id}
       data-section={id}
       data-section-label="Ecosystem"
-      className="section-ecosystem relative px-4 py-28 sm:px-6 md:px-10 md:py-36"
+      className="section-ecosystem relative overflow-hidden px-4 py-24 sm:px-6 md:px-10 md:py-32"
     >
-      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-center lg:gap-16">
-        {/* COPY */}
-        <div className="order-2 lg:order-1">
-          <p className="eyebrow mb-8">III — The Ecosystem</p>
-          <p className="font-display text-2xl font-light leading-[1.2] text-ivory sm:text-3xl lg:text-4xl">
-            Solena sits at the center of converging sectors — brand, built
-            environment, culture, capital, and narrative architecture moving as
-            a single field.
-          </p>
-          <p className="mt-8 text-[0.65rem] uppercase tracking-[0.35em] text-stone/70 lg:text-xs">
-            Active sector ·{" "}
-            <span
-              data-eco-active
-              className="font-signature text-sm italic tracking-normal text-bronze-glow"
-            >
-              {sector.name}
-            </span>
-          </p>
-          <p className="mt-3 max-w-md font-display text-lg font-light leading-snug text-ivory/85">
-            {sector.tagline}
-          </p>
+      <div className="mx-auto max-w-4xl text-center">
+        <p className="eyebrow mb-6">III — The Ecosystem</p>
+        <p className="font-display text-2xl font-light leading-[1.2] text-ivory sm:text-3xl md:text-4xl">
+          Solena sits at the center of converging sectors — brand, built
+          environment, culture, capital, and narrative architecture moving as
+          a single field.
+        </p>
+      </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <Link
-              to="/sectors/$sector"
-              params={{ sector: sector.slug }}
-              className="bronze-line inline-flex items-center gap-3 border-b border-stone/30 pb-2 text-xs uppercase tracking-[0.4em] text-ivory hover:text-bronze-glow"
-            >
-              <span>Open {sector.name}</span>
-              <span aria-hidden className="text-bronze">→</span>
-            </Link>
-            <p className="text-[0.55rem] uppercase tracking-[0.4em] text-stone/55">
-              {String(index + 1).padStart(2, "0")} /{" "}
-              {String(SECTORS.length).padStart(2, "0")} · Drag · Scroll · ←/→
-            </p>
-          </div>
+      {/* ORBIT STAGE — full width, centered, telescope arc padded to top-left */}
+      <div className="relative mx-auto mt-16 w-full max-w-[min(96vw,46rem)] sm:mt-20">
+        {/* Telescope quarter-arc — sits OUTSIDE the orbit with padding */}
+        <div
+          className="pointer-events-auto absolute z-30 hidden sm:block"
+          style={{
+            left: "-14%",
+            top: "-14%",
+            width: "44%",
+            height: "44%",
+          }}
+        >
+          <RadialGearDial
+            steps={SECTORS.length}
+            index={index}
+            onChange={setIndex}
+          />
         </div>
 
-        {/* ORBIT + RADIAL GEAR */}
-        <div className="order-1 lg:order-2">
-          <div className="relative mx-auto w-full max-w-[min(96vw,42rem)]">
-            <div className="relative aspect-square">
-              {/* Radial gear dial — anchored to LEFT of orbit, arcing around it */}
-              <div className="pointer-events-auto absolute -left-[9%] -top-[9%] z-30 h-[52%] w-[52%] sm:-left-[12%] sm:-top-[12%]">
-                <RadialGearDial
-                  steps={SECTORS.length}
-                  index={index}
-                  onChange={setIndex}
-                />
-              </div>
-
-              {/* Orbit stage */}
-              <div className="ecosystem-stage absolute inset-0">
-                {/* ambient slow drift layer — independent rings */}
-                <div className="ecosystem-drift pointer-events-none absolute inset-0">
-                  <OrbitRings />
-                </div>
-                <OrbitRings />
-                {SECTORS.map((node, i) => {
-                  const isActive = i === index;
-                  const ring = ringFor(i);
-                  const start = (i / SECTORS.length) * 360 - 90;
-                  const radius = [32, 38, 44][ring];
-                  const duration = [86, 112, 138][ring];
-                  return (
-                    <div
-                      key={node.slug}
-                      className={`eco-orbit-lane energy-${ring + 1}`}
-                      style={{
-                        "--orbit-start": `${start}deg`,
-                        "--orbit-radius": `${radius}%`,
-                        "--orbit-duration": `${duration}s`,
-                      } as CSSProperties}
-                    >
-                      <Link
-                        to="/sectors/$sector"
-                        params={{ sector: node.slug }}
-                        onPointerEnter={() => setIndex(i)}
-                        onFocus={() => setIndex(i)}
-                        className={`eco-node absolute left-1/2 top-1/2 ${isActive ? "is-active" : ""}`}
-                        aria-label={`Open ${node.name}`}
-                      >
-                        <div className="eco-node-disc relative flex h-[clamp(2.75rem,8vw,5rem)] w-[clamp(2.75rem,8vw,5rem)] items-center justify-center rounded-full text-center text-[clamp(0.52rem,1.35vw,0.76rem)] font-light leading-tight tracking-[0.04em] text-ivory/85">
-                          <div className="absolute inset-0 rounded-full bg-ivory/[0.035] backdrop-blur-xl" />
-                          <div className="absolute inset-0 rounded-full border border-ivory/12" />
-                          {isActive && <span className="eco-ping" aria-hidden />}
-                          <span className="relative px-1">{node.name}</span>
-                        </div>
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-
-
-              {/* SOLENA core */}
-              <div className="pointer-events-none absolute left-1/2 top-1/2 flex h-[28%] w-[28%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full">
-                <div className="absolute inset-0 rounded-full bg-obsidian/75 backdrop-blur-2xl" />
-                <div
-                  className="absolute inset-0 rounded-full border border-ivory/10"
-                  style={{
-                    boxShadow:
-                      "0 0 60px rgba(184,134,73,0.20), inset 0 0 40px rgba(0,0,0,0.6)",
-                  }}
-                />
-                <span className="relative font-signature text-base tracking-[0.22em] text-ivory sm:text-xl lg:text-2xl">
-                  SOLENA
-                </span>
-              </div>
+        <div className="relative aspect-square">
+          {/* Orbit stage */}
+          <div className="ecosystem-stage absolute inset-0">
+            {/* ambient slow drift layer — independent rings */}
+            <div className="ecosystem-drift pointer-events-none absolute inset-0">
+              <OrbitRings />
             </div>
+            <OrbitRings />
+            {SECTORS.map((node, i) => {
+              const isActive = i === index;
+              const ring = ringFor(i);
+              const start = (i / SECTORS.length) * 360 - 90;
+              const radius = [36, 40, 44][ring];
+              const duration = [96, 122, 148][ring];
+              return (
+                <div
+                  key={node.slug}
+                  className={`eco-orbit-lane energy-${ring + 1}`}
+                  style={{
+                    "--orbit-start": `${start}deg`,
+                    "--orbit-radius": `${radius}%`,
+                    "--orbit-duration": `${duration}s`,
+                  } as CSSProperties}
+                >
+                  <Link
+                    to="/sectors/$sector"
+                    params={{ sector: node.slug }}
+                    onPointerEnter={() => setIndex(i)}
+                    onFocus={() => setIndex(i)}
+                    className={`eco-node absolute left-1/2 top-1/2 ${isActive ? "is-active" : ""}`}
+                    aria-label={`Open ${node.name}`}
+                  >
+                    <div className="eco-node-disc relative flex h-[clamp(3rem,9vw,5.5rem)] w-[clamp(3rem,9vw,5.5rem)] items-center justify-center rounded-full text-center text-[clamp(0.55rem,1.35vw,0.78rem)] font-light leading-tight tracking-[0.04em] text-ivory/85">
+                      <div className="absolute inset-0 rounded-full bg-ivory/[0.035] backdrop-blur-xl" />
+                      <div className="absolute inset-0 rounded-full border border-ivory/12" />
+                      {isActive && <span className="eco-ping" aria-hidden />}
+                      <span className="relative px-1">{node.name}</span>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
           </div>
+
+          {/* SOLENA core */}
+          <div className="pointer-events-none absolute left-1/2 top-1/2 flex h-[26%] w-[26%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full">
+            <div className="absolute inset-0 rounded-full bg-obsidian/75 backdrop-blur-2xl" />
+            <div
+              className="absolute inset-0 rounded-full border border-ivory/10"
+              style={{
+                boxShadow:
+                  "0 0 60px rgba(184,134,73,0.20), inset 0 0 40px rgba(0,0,0,0.6)",
+              }}
+            />
+            <span className="relative font-signature text-base tracking-[0.22em] text-ivory sm:text-xl lg:text-2xl">
+              SOLENA
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Active sector caption + CTA — BELOW orbit, not overlapping */}
+      <div className="mx-auto mt-14 max-w-xl text-center">
+        <p className="text-[0.6rem] uppercase tracking-[0.4em] text-stone/70">
+          Active sector ·{" "}
+          <span
+            data-eco-active
+            className="font-signature text-sm italic tracking-normal text-bronze-glow"
+          >
+            {sector.name}
+          </span>
+        </p>
+        <p className="mt-3 font-display text-lg font-light leading-snug text-ivory/85">
+          {sector.tagline}
+        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+          <Link
+            to="/sectors/$sector"
+            params={{ sector: sector.slug }}
+            className="bronze-line inline-flex items-center gap-3 border-b border-stone/30 pb-2 text-xs uppercase tracking-[0.4em] text-ivory hover:text-bronze-glow"
+          >
+            <span>Open {sector.name}</span>
+            <span aria-hidden className="text-bronze">→</span>
+          </Link>
+          <p className="text-[0.55rem] uppercase tracking-[0.4em] text-stone/55">
+            {String(index + 1).padStart(2, "0")} /{" "}
+            {String(SECTORS.length).padStart(2, "0")} · Drag · Scroll · ←/→
+          </p>
         </div>
       </div>
     </section>
   );
 }
+
