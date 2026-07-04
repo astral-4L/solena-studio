@@ -512,8 +512,9 @@
 }
 /* Coarse pointer (mobile) → drop heavy backdrop-filters for smooth FPS */
 @media (hover: none) and (pointer: coarse) {
-  .eco-node-glass { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .eco-core-glass { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .eco-node-glass { backdrop-filter: none; background: rgba(20, 18, 24, 0.5); }
+  .eco-core-glass { backdrop-filter: blur(6px); }
 }
+
 
 
