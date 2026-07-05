@@ -188,8 +188,6 @@ export function OrbitalEcosystem({ id = "ecosystem" }: { id?: string }) {
     return () => window.removeEventListener("hashchange", onHash);
   }, [index]);
 
-  const ringFor = (i: number) => i % 3;
-
   return (
     <section
       data-zone={id}
@@ -209,7 +207,6 @@ export function OrbitalEcosystem({ id = "ecosystem" }: { id?: string }) {
       {/* ORBIT STAGE */}
       <div className="relative mx-auto mt-16 w-full max-w-[min(94vw,44rem)] sm:mt-20">
         <div className="relative aspect-square">
-          <div className="ecosystem-stage absolute inset-0">
           <div className="ecosystem-rings pointer-events-none absolute inset-0 z-10">
             <div className="ecosystem-drift absolute inset-0">
               <OrbitRings />
