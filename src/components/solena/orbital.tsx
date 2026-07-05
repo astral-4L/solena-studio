@@ -241,7 +241,7 @@ export function OrbitalEcosystem({ id = "ecosystem" }: { id?: string }) {
                         className={`eco-node ${isActive ? "is-active" : ""}`}
                         aria-label={`Open ${node.name}`}
                       >
-                        <div className="eco-node-disc relative flex h-[clamp(3rem,9vw,5.25rem)] w-[clamp(3rem,9vw,5.25rem)] items-center justify-center rounded-full text-center text-[clamp(0.55rem,1.35vw,0.78rem)] font-light leading-tight tracking-[0.04em] text-ivory/90">
+                        <div className="eco-node-disc relative flex items-center justify-center rounded-full text-center text-[clamp(0.55rem,1.35vw,0.78rem)] font-light leading-tight tracking-[0.04em] text-ivory/90">
                           <div className="eco-node-glass absolute inset-0 rounded-full" />
                           <div className="eco-node-ring absolute inset-0 rounded-full" />
                           <div className="eco-node-sheen absolute inset-0 rounded-full" />
