@@ -357,7 +357,10 @@
   will-change: transform;
   transform: rotate(var(--orbit-start, 0deg));
   z-index: 60; /* sectors always render above the Solena core */
-  animation: eco-orbit-continuous var(--orbit-duration, 110s) linear infinite;
+  animation-name: eco-orbit-continuous;
+  animation-duration: var(--orbit-duration, 110s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 /* All lanes rotate the same direction for a single coherent field */
 .eco-orbit-lane.energy-2 { animation-direction: normal; }
@@ -373,11 +376,14 @@
 }
 .eco-orbit-counter {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: clamp(3rem, 9vw, 5.25rem);
+  height: clamp(3rem, 9vw, 5.25rem);
   transform-origin: center center;
   will-change: transform;
-  animation: eco-orbit-counter var(--orbit-duration, 110s) linear infinite;
+  animation-name: eco-orbit-counter;
+  animation-duration: var(--orbit-duration, 110s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 
@@ -438,19 +444,22 @@
   transform: translateZ(0) scale(1.08);
 }
 .eco-node.is-active .eco-node-disc {
-  animation: eco-pulse var(--node-pulse-duration, 5.8s) ease-in-out infinite;
+  animation-name: eco-pulse;
+  animation-duration: var(--node-pulse-duration, 5.8s);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
   animation-delay: var(--node-pulse-delay, 0s);
 }
 .eco-node.is-active .eco-node-ring {
   border-color: rgba(212, 168, 116, 0.7);
 }
 .eco-node:not(.is-active) .eco-node-disc {
-  animation: eco-breathe var(--node-pulse-duration, 6.5s) ease-in-out infinite;
+  animation-name: eco-breathe;
+  animation-duration: var(--node-pulse-duration, 6.5s);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
   animation-delay: var(--node-pulse-delay, 0s);
 }
-.eco-orbit-lane:nth-child(2n) .eco-node-disc { animation-delay: -1.5s; }
-.eco-orbit-lane:nth-child(3n) .eco-node-disc { animation-delay: -3s; }
-.eco-orbit-lane:nth-child(5n) .eco-node-disc { animation-delay: -4.5s; }
 
 /* Solena glass core */
 .eco-core-glass {
