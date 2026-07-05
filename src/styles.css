@@ -340,14 +340,26 @@
 }
 
 /* --- Ecosystem nodes --- */
+.ecosystem-rings,
+.ecosystem-stage {
+  transform: translateZ(0);
+  transform-style: preserve-3d;
+}
+
+.ecosystem-stage {
+  perspective: 900px;
+  isolation: isolate;
+  contain: layout paint style;
+}
+
 .eco-orbit-lane {
   position: absolute;
   inset: 0;
   pointer-events: none;
   transform-origin: center center;
   will-change: transform;
-  transform: translateZ(0);
-  z-index: 3; /* sectors above the Solena core */
+  transform: translate3d(0, 0, 48px);
+  z-index: 60; /* sectors always render above the Solena core */
   animation: eco-orbit-continuous var(--orbit-duration, 110s) linear infinite;
 }
 /* All lanes rotate the same direction for a single coherent field */
@@ -360,25 +372,31 @@
   top: 50%;
   width: 0;
   height: 0;
-  transform: translate3d(var(--orbit-radius, 40%), 0, 0);
+  transform: translate3d(var(--orbit-radius, 40%), 0, 56px);
+  transform-style: preserve-3d;
 }
 .eco-orbit-counter {
   transform-origin: center center;
   will-change: transform;
   animation: eco-orbit-counter var(--orbit-duration, 110s) linear infinite;
-  animation-direction: reverse;
+  transform-style: preserve-3d;
 }
 
 
 .eco-node {
   pointer-events: auto;
   display: block;
-  transform: translate(-50%, -50%);
+  position: relative;
+  z-index: 70;
+  transform: translate3d(-50%, -50%, 64px);
+  will-change: transform;
 }
 .eco-node-disc {
   transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 700ms ease;
   isolation: isolate;
+  transform: translateZ(0) scale(1);
+  will-change: transform, opacity;
 }
 
 /* Glass on each sector node — lighter blur for perf */
@@ -415,16 +433,18 @@
 
 .eco-node:hover .eco-node-disc,
 .eco-node:focus-visible .eco-node-disc {
-  transform: translate(-50%, -50%) scale(1.06);
+  transform: translateZ(0) scale(1.08);
 }
 .eco-node.is-active .eco-node-disc {
-  animation: eco-pulse 3s ease-in-out infinite;
+  animation: eco-pulse var(--node-pulse-duration, 5.8s) ease-in-out infinite;
+  animation-delay: var(--node-pulse-delay, 0s);
 }
 .eco-node.is-active .eco-node-ring {
   border-color: rgba(212, 168, 116, 0.7);
 }
 .eco-node:not(.is-active) .eco-node-disc {
-  animation: eco-breathe 6.5s ease-in-out infinite;
+  animation: eco-breathe var(--node-pulse-duration, 6.5s) ease-in-out infinite;
+  animation-delay: var(--node-pulse-delay, 0s);
 }
 .eco-orbit-lane:nth-child(2n) .eco-node-disc { animation-delay: -1.5s; }
 .eco-orbit-lane:nth-child(3n) .eco-node-disc { animation-delay: -3s; }
@@ -450,28 +470,28 @@
     box-shadow:
       0 0 0 1px rgba(212, 168, 116, 0.5) inset,
       0 0 60px rgba(212, 168, 116, 0.28);
-    transform: scale(1.10);
+    transform: translateZ(0) scale(1.08);
   }
   50% {
     box-shadow:
       0 0 0 1px rgba(232, 192, 140, 0.75) inset,
       0 0 90px rgba(232, 192, 140, 0.55),
       0 0 140px rgba(184, 134, 73, 0.22);
-    transform: scale(1.18);
+    transform: translateZ(0) scale(1.18);
   }
 }
 @keyframes eco-breathe {
-  0%, 100% { opacity: 0.82; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.035); }
+  0%, 100% { opacity: 0.78; transform: translateZ(0) scale(0.94); }
+  50% { opacity: 1; transform: translateZ(0) scale(1.08); }
 }
 
 @keyframes eco-orbit-continuous {
-  from { transform: rotate(var(--orbit-start, 0deg)); }
-  to { transform: rotate(calc(var(--orbit-start, 0deg) + 360deg)); }
+  from { transform: translate3d(0, 0, 48px) rotate(var(--orbit-start, 0deg)); }
+  to { transform: translate3d(0, 0, 48px) rotate(calc(var(--orbit-start, 0deg) + 360deg)); }
 }
 @keyframes eco-orbit-counter {
-  from { transform: rotate(calc(var(--orbit-start, 0deg) * -1)); }
-  to { transform: rotate(calc(var(--orbit-start, 0deg) * -1 - 360deg)); }
+  from { transform: translateZ(64px) rotate(calc(var(--orbit-start, 0deg) * -1)); }
+  to { transform: translateZ(64px) rotate(calc(var(--orbit-start, 0deg) * -1 - 360deg)); }
 }
 
 @keyframes eco-drift {
