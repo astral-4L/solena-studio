@@ -368,11 +368,11 @@
 
 .eco-orbit-slot {
   position: absolute;
-  left: 50%;
+  left: calc(50% + var(--orbit-radius, 40%));
   top: 50%;
-  width: 0;
-  height: 0;
-  transform: translate3d(var(--orbit-radius, 40%), 0, 56px);
+  width: max-content;
+  height: max-content;
+  transform: translate3d(0, 0, 56px);
   transform-style: preserve-3d;
 }
 .eco-orbit-counter {
@@ -385,7 +385,7 @@
 
 .eco-node {
   pointer-events: auto;
-  display: block;
+  display: inline-flex;
   position: relative;
   z-index: 70;
   transform: translate3d(-50%, -50%, 64px);
