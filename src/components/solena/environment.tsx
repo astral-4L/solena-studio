@@ -75,9 +75,9 @@ export function EnvironmentCanvas({
           loop
           playsInline
           preload="auto"
-          // @ts-expect-error - non-standard iOS attribute for inline muted autoplay
-          webkit-playsinline="true"
+          {...({ "webkit-playsinline": "true" } as Record<string, string>)}
           disablePictureInPicture
+
           ref={(el) => {
             if (!el) return;
             el.muted = true;
