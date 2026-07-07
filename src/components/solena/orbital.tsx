@@ -28,20 +28,33 @@ export const SECTORS: Sector[] = [
 
 export const ECO_NODES = SECTORS.map((s) => s.name);
 
-// Distinct radii + periods for eleven sectors.
-const SECTOR_ORBITS = [
-  { radius: 46, duration: 168 },
-  { radius: 43, duration: 156 },
-  { radius: 40, duration: 144 },
-  { radius: 37, duration: 132 },
-  { radius: 34, duration: 120 },
-  { radius: 31, duration: 108 },
-  { radius: 28, duration: 96 },
-  { radius: 25, duration: 84 },
-  { radius: 22, duration: 76 },
-  { radius: 19, duration: 68 },
-  { radius: 16, duration: 60 },
+/**
+ * Three concentric orbits — mirrors the reference composition where a few
+ * large mini-planets share broad, softly-etched rings. Sectors are
+ * distributed across the rings so multiple bodies occupy the same lane at
+ * different angles, and each ring rotates as a single field.
+ */
+const ORBIT_RINGS = [
+  { radius: 26, duration: 210 }, // inner
+  { radius: 38, duration: 260 }, // middle
+  { radius: 50, duration: 320 }, // outer
 ] as const;
+
+// Deterministic ring assignment for each sector index. Distribution roughly
+// 3 / 4 / 4 keeps every ring visually populated without crowding.
+const RING_ASSIGNMENT = [2, 1, 2, 0, 1, 2, 0, 1, 2, 1, 0] as const;
+
+function orbitFor(i: number) {
+  const ring = RING_ASSIGNMENT[i % RING_ASSIGNMENT.length];
+  const total = RING_ASSIGNMENT.filter((r) => r === ring).length;
+  const positionInRing = RING_ASSIGNMENT.slice(0, i).filter(
+    (r) => r === ring,
+  ).length;
+  const start = (positionInRing / total) * 360 - 90;
+  return { ...ORBIT_RINGS[ring], ring, start };
+}
+
+const SECTOR_ORBITS = SECTORS.map((_, i) => orbitFor(i));
 
 /**
  * Glassmorphic orbit rings. Continuous energy pulses trace each lane at
