@@ -9,7 +9,9 @@ import viePortrait from "@/assets/vie-halo-portrait.png.asset.json";
 import gravityPortrait2 from "@/assets/gravity-portrait-2.png.asset.json";
 import heroVideoLandscape from "@/assets/hero-video-landscape.mp4.asset.json";
 import heroVideoPortrait from "@/assets/hero-video-portrait.mp4.asset.json";
-import seedVideo from "@/assets/seed-video.mp4.asset.json";
+import seedVideo from "@/assets/seed-01-2.mp4.asset.json";
+import gravityVideo from "@/assets/g-01-1.mp4.asset.json";
+import solenaWordmark from "@/assets/solena-wordmark-002.png.asset.json";
 
 import {
   EnvironmentCanvas,
