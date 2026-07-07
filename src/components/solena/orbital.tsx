@@ -35,9 +35,9 @@ export const ECO_NODES = SECTORS.map((s) => s.name);
  * different angles, and each ring rotates as a single field.
  */
 const ORBIT_RINGS = [
-  { radius: 26, duration: 210 }, // inner
-  { radius: 38, duration: 260 }, // middle
-  { radius: 50, duration: 320 }, // outer
+  { radius: 24, duration: 210 }, // inner
+  { radius: 35, duration: 260 }, // middle
+  { radius: 46, duration: 320 }, // outer
 ] as const;
 
 // Deterministic ring assignment for each sector index. Distribution roughly
