@@ -137,7 +137,14 @@ function SolenaSite() {
             src: heroVideoLandscape.url,
             srcPortrait: heroVideoPortrait.url,
             zone: "hero",
-            peakOpacity: 0.22,
+            peakOpacity: 0.24,
+          },
+          {
+            id: "ecosystem-flow",
+            src: gravityVideo.url,
+            zone: "ecosystem",
+            peakOpacity: 0.2,
+            blend: "screen",
           },
           {
             id: "future",
