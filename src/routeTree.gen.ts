@@ -21,6 +21,7 @@ import { Route as SectorsSectorRouteImport } from './routes/sectors.$sector'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 
 const ThesisRoute = ThesisRouteImport.update({
   id: '/thesis',
@@ -82,6 +83,11 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin': typeof AdminIndexRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/sectors/$sector'
     | '/admin/'
+    | '/api/public/health'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/sectors/$sector'
     | '/admin'
+    | '/api/public/health'
   id:
     | '__root__'
     | '/'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/sectors/$sector'
     | '/admin/'
+    | '/api/public/health'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -178,6 +190,7 @@ export interface RootRouteChildren {
   JournalRoute: typeof JournalRoute
   ThesisRoute: typeof ThesisRoute
   SectorsSectorRoute: typeof SectorsSectorRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -266,6 +279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -294,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   JournalRoute: JournalRoute,
   ThesisRoute: ThesisRoute,
   SectorsSectorRoute: SectorsSectorRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
