@@ -109,14 +109,23 @@ function AnalyticsPage() {
           <p className="text-[0.6rem] uppercase tracking-[0.4em] text-stone/50">Analytics</p>
           <h1 className="mt-2 font-display text-3xl font-extralight text-ivory">Traffic & Engagement</h1>
         </div>
-        <div className="flex gap-1 rounded border border-ivory/10 p-1 text-[0.65rem] uppercase tracking-[0.3em]">
-          {(Object.keys(RANGES) as RangeKey[]).map((r) => (
-            <button key={r} onClick={() => setRange(r)} className={`rounded px-3 py-1.5 ${range === r ? "bg-ivory/10 text-ivory" : "text-stone/60 hover:text-ivory"}`}>
-              {r}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex gap-1 rounded border border-ivory/10 p-1 text-[0.65rem] uppercase tracking-[0.3em]">
+            {(Object.keys(RANGES) as RangeKey[]).map((r) => (
+              <button key={r} onClick={() => setRange(r)} className={`rounded px-3 py-1.5 ${range === r ? "bg-ivory/10 text-ivory" : "text-stone/60 hover:text-ivory"}`}>
+                {r}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => downloadCsv(rows, `solena-analytics-${range}.csv`)}
+            className="inline-flex items-center gap-2 border border-ivory/15 px-3 py-2 text-[0.6rem] uppercase tracking-[0.3em] text-stone/70 hover:border-bronze-glow hover:text-bronze-glow"
+          >
+            <Download size={12} /> Export CSV
+          </button>
         </div>
       </header>
+
 
       {filter && (
         <div className="flex items-center justify-between gap-4 rounded border border-bronze-glow/40 bg-bronze-glow/5 px-4 py-3">
