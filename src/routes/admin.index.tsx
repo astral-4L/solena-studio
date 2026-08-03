@@ -84,13 +84,23 @@ function AdminOverview() {
         <p className="mt-1 text-sm text-stone/60">Last 30 days · live data from your deployment</p>
       </header>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
-        <StatCard label="Views · 30d" value={stats.data?.views30 ?? "—"} />
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+        <StatCard
+          label="Live now"
+          value={stats.data?.liveNow ?? "—"}
+          hint="active in last 5 min"
+        />
+        <StatCard
+          label="Views · 30d"
+          value={stats.data?.views30 ?? "—"}
+          hint={stats.data?.delta == null ? undefined : `${stats.data.delta >= 0 ? "▲" : "▼"} ${Math.abs(stats.data.delta)}% vs prior 30d`}
+        />
         <StatCard label="Views · 7d" value={stats.data?.views7 ?? "—"} />
         <StatCard label="Submissions" value={stats.data?.submissions ?? "—"} hint={`${stats.data?.submissionsNew ?? 0} new`} />
         <StatCard label="Accounts" value={stats.data?.users ?? "—"} />
         <StatCard label="Sessions · 30d" value={series.data?.reduce((s, d) => s + d.visitors, 0) ?? "—"} />
       </div>
+
 
       <div className="glass p-6">
         <p className="text-[0.6rem] uppercase tracking-[0.4em] text-stone/50">Traffic · last 30 days</p>
