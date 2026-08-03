@@ -4,7 +4,23 @@ import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend } from "recharts";
 import { format, startOfDay, subDays } from "date-fns";
-import { X } from "lucide-react";
+import { X, Download } from "lucide-react";
+
+function downloadCsv(rows: Row[], filename: string) {
+  const header = ["created_at", "path", "device", "referrer", "session_id"];
+  const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+  const body = rows.map((r) =>
+    [r.created_at, r.path, r.device ?? "", r.referrer ?? "", r.session_id ?? ""].map((v) => esc(String(v))).join(","),
+  );
+  const blob = new Blob([[header.join(","), ...body].join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 
 export const Route = createFileRoute("/admin/analytics")({
   ssr: false,
