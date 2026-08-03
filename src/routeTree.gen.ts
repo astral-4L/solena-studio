@@ -20,6 +20,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SectorsSectorRouteImport } from './routes/sectors.$sector'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
+import { Route as AdminDeploymentRouteImport } from './routes/admin.deployment'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 
@@ -78,6 +79,11 @@ const AdminSubmissionsRoute = AdminSubmissionsRouteImport.update({
   path: '/submissions',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminDeploymentRoute = AdminDeploymentRouteImport.update({
+  id: '/deployment',
+  path: '/deployment',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/thesis'
     | '/admin/analytics'
+    | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
     | '/sectors/$sector'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/thesis'
     | '/admin/analytics'
+    | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
     | '/sectors/$sector'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/thesis'
     | '/admin/analytics'
+    | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
     | '/sectors/$sector'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSubmissionsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/deployment': {
+      id: '/admin/deployment'
+      path: '/deployment'
+      fullPath: '/admin/deployment'
+      preLoaderRoute: typeof AdminDeploymentRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/analytics': {
       id: '/admin/analytics'
       path: '/analytics'
@@ -291,6 +310,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminDeploymentRoute: typeof AdminDeploymentRoute
   AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -298,6 +318,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminDeploymentRoute: AdminDeploymentRoute,
   AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,

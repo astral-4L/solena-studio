@@ -147,7 +147,9 @@ function AdminLayout() {
     { to: "/admin/submissions", label: "Submissions", icon: Inbox },
     { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/admin/users", label: "Users & Roles", icon: Users },
+    { to: "/admin/deployment", label: "Deployment", icon: ServerCog },
   ];
+
 
   const isActive = (to: string, exact?: boolean) =>
     exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");
