@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Inbox, BarChart3, Users, LogOut, Bell, BellOff } from "lucide-react";
+import { LayoutDashboard, Inbox, BarChart3, Users, LogOut, Bell, BellOff, ServerCog } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -147,7 +147,9 @@ function AdminLayout() {
     { to: "/admin/submissions", label: "Submissions", icon: Inbox },
     { to: "/admin/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/admin/users", label: "Users & Roles", icon: Users },
+    { to: "/admin/deployment", label: "Deployment", icon: ServerCog },
   ];
+
 
   const isActive = (to: string, exact?: boolean) =>
     exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");

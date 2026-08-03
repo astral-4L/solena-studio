@@ -24,23 +24,32 @@ function AdminOverview() {
 
   const stats = useQuery({
     queryKey: ["admin-overview"],
+    refetchInterval: 30_000,
     queryFn: async () => {
-      const [pv, pv7, subs, subsNew, users] = await Promise.all([
+      const prevFrom = subDays(new Date(), 60).toISOString();
+      const [pv, pv7, pvPrev30, subs, subsNew, users, live] = await Promise.all([
         supabase.from("page_views").select("*", { count: "exact", head: true }).gte("created_at", since),
         supabase.from("page_views").select("*", { count: "exact", head: true }).gte("created_at", subDays(new Date(), 7).toISOString()),
+        supabase.from("page_views").select("*", { count: "exact", head: true }).gte("created_at", prevFrom).lt("created_at", since),
         supabase.from("contact_submissions").select("*", { count: "exact", head: true }),
         supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("profiles").select("*", { count: "exact", head: true }),
+        supabase.from("page_views").select("session_id").gte("created_at", new Date(Date.now() - 5 * 60_000).toISOString()),
       ]);
+      const views30 = pv.count ?? 0;
+      const prev = pvPrev30.count ?? 0;
       return {
-        views30: pv.count ?? 0,
+        views30,
         views7: pv7.count ?? 0,
+        delta: prev ? Math.round(((views30 - prev) / prev) * 100) : null,
         submissions: subs.count ?? 0,
         submissionsNew: subsNew.count ?? 0,
         users: users.count ?? 0,
+        liveNow: new Set((live.data ?? []).map((r) => r.session_id).filter(Boolean)).size,
       };
     },
   });
+
 
   const series = useQuery({
     queryKey: ["admin-overview-series"],
@@ -75,13 +84,23 @@ function AdminOverview() {
         <p className="mt-1 text-sm text-stone/60">Last 30 days · live data from your deployment</p>
       </header>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
-        <StatCard label="Views · 30d" value={stats.data?.views30 ?? "—"} />
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+        <StatCard
+          label="Live now"
+          value={stats.data?.liveNow ?? "—"}
+          hint="active in last 5 min"
+        />
+        <StatCard
+          label="Views · 30d"
+          value={stats.data?.views30 ?? "—"}
+          hint={stats.data?.delta == null ? undefined : `${stats.data.delta >= 0 ? "▲" : "▼"} ${Math.abs(stats.data.delta)}% vs prior 30d`}
+        />
         <StatCard label="Views · 7d" value={stats.data?.views7 ?? "—"} />
         <StatCard label="Submissions" value={stats.data?.submissions ?? "—"} hint={`${stats.data?.submissionsNew ?? 0} new`} />
         <StatCard label="Accounts" value={stats.data?.users ?? "—"} />
         <StatCard label="Sessions · 30d" value={series.data?.reduce((s, d) => s + d.visitors, 0) ?? "—"} />
       </div>
+
 
       <div className="glass p-6">
         <p className="text-[0.6rem] uppercase tracking-[0.4em] text-stone/50">Traffic · last 30 days</p>

@@ -20,7 +20,9 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SectorsSectorRouteImport } from './routes/sectors.$sector'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
+import { Route as AdminDeploymentRouteImport } from './routes/admin.deployment'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 
 const ThesisRoute = ThesisRouteImport.update({
   id: '/thesis',
@@ -77,10 +79,20 @@ const AdminSubmissionsRoute = AdminSubmissionsRouteImport.update({
   path: '/submissions',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminDeploymentRoute = AdminDeploymentRouteImport.update({
+  id: '/deployment',
+  path: '/deployment',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
   getParentRoute: () => AdminRoute,
+} as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -92,10 +104,12 @@ export interface FileRoutesByFullPath {
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -105,10 +119,12 @@ export interface FileRoutesByTo {
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin': typeof AdminIndexRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -120,10 +136,12 @@ export interface FileRoutesById {
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -136,10 +154,12 @@ export interface FileRouteTypes {
     | '/journal'
     | '/thesis'
     | '/admin/analytics'
+    | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
     | '/sectors/$sector'
     | '/admin/'
+    | '/api/public/health'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -149,10 +169,12 @@ export interface FileRouteTypes {
     | '/journal'
     | '/thesis'
     | '/admin/analytics'
+    | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
     | '/sectors/$sector'
     | '/admin'
+    | '/api/public/health'
   id:
     | '__root__'
     | '/'
@@ -163,10 +185,12 @@ export interface FileRouteTypes {
     | '/journal'
     | '/thesis'
     | '/admin/analytics'
+    | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
     | '/sectors/$sector'
     | '/admin/'
+    | '/api/public/health'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -178,6 +202,7 @@ export interface RootRouteChildren {
   JournalRoute: typeof JournalRoute
   ThesisRoute: typeof ThesisRoute
   SectorsSectorRoute: typeof SectorsSectorRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -259,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSubmissionsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/deployment': {
+      id: '/admin/deployment'
+      path: '/deployment'
+      fullPath: '/admin/deployment'
+      preLoaderRoute: typeof AdminDeploymentRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/analytics': {
       id: '/admin/analytics'
       path: '/analytics'
@@ -266,11 +298,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminDeploymentRoute: typeof AdminDeploymentRoute
   AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -278,6 +318,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminDeploymentRoute: AdminDeploymentRoute,
   AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -294,17 +335,8 @@ const rootRouteChildren: RootRouteChildren = {
   JournalRoute: JournalRoute,
   ThesisRoute: ThesisRoute,
   SectorsSectorRoute: SectorsSectorRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

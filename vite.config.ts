@@ -2,21 +2,20 @@
 // tsConfigPaths, nitro (default cloudflare-module), VITE_* env injection, @ path alias,
 // React/TanStack dedupe, error logger plugins, and sandbox detection.
 //
-// On Vercel we use Nitro's `vercel` preset (produces .vercel/output that Vercel
-// auto-detects). Locally / elsewhere we keep the default cloudflare-module preset.
+// Cross-platform deployment:
+//   - Vercel                -> auto-detected (`vercel` preset, .vercel/output)
+//   - Render / Railway /    -> set NITRO_PRESET=node-server (runs .output/server/index.mjs)
+//     Fly / Docker / any Node host
+//   - Static hosts / Caddy  -> set NITRO_PRESET=static (serves dist/server)
+//   - Lovable / default     -> cloudflare-module
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-const isVercel = !!process.env.VERCEL;
+const preset =
+  process.env.NITRO_PRESET ?? (process.env.VERCEL ? "vercel" : undefined);
 
 export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
-  ...(isVercel
-    ? {
-        nitro: {
-          preset: "vercel",
-        },
-      }
-    : {}),
+  ...(preset ? { nitro: { preset } } : {}),
 });
