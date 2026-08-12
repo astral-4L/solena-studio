@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { LayoutDashboard, Inbox, BarChart3, Users, LogOut, Bell, BellOff, ServerCog } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { bootstrapFirstAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -32,7 +33,11 @@ function AdminLayout() {
         navigate({ to: "/auth" });
         return;
       }
-      await supabase.rpc("bootstrap_first_admin");
+      try {
+        await bootstrapFirstAdmin();
+      } catch {
+        /* setup already completed or not permitted */
+      }
       const { data: roleData } = await supabase
         .from("user_roles")
         .select("role")
