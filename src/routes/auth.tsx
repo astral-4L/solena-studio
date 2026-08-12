@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { bootstrapFirstAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -34,7 +35,7 @@ function AuthPage() {
         });
         if (error) throw error;
         if (data.session) {
-          await supabase.rpc("bootstrap_first_admin");
+          await bootstrapFirstAdmin().catch(() => undefined);
           toast.success("Account created. Opening admin.");
           navigate({ to: "/admin" });
         } else {
@@ -44,7 +45,7 @@ function AuthPage() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        await supabase.rpc("bootstrap_first_admin");
+        await bootstrapFirstAdmin().catch(() => undefined);
         navigate({ to: "/admin" });
       }
     } catch (err) {
