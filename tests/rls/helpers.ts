@@ -177,6 +177,7 @@ export async function seedSubmission(marker: string) {
   const res = await rest<{ id: string }>('contact_submissions', {
     service: true,
     method: 'POST',
+    representation: true,
     body: {
       name: `RLS ${marker}`,
       email: `${marker}@example.com`,

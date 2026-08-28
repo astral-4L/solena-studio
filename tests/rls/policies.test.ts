@@ -7,6 +7,7 @@ import {
   hasServiceRole,
   rest,
   seedSubmission,
+  writeAllowed,
   writeBlocked,
   type TestUser,
 } from './helpers';
@@ -43,7 +44,7 @@ suite('row-level security policies', () => {
     it('accepts a well-formed anonymous insert', async () => {
       const res = await rest('page_views', { method: 'POST', body: pageView('ok') });
       expect(res.error).toBeNull();
-      expect(res.rows).toHaveLength(1);
+      expect(writeAllowed(res)).toBe(true);
     });
 
     it('rejects a path that does not start with /', async () => {
@@ -133,7 +134,7 @@ suite('row-level security policies', () => {
         },
       });
       expect(res.error).toBeNull();
-      expect(res.rows).toHaveLength(1);
+      expect(writeAllowed(res)).toBe(true);
     });
 
     it('never leaks submissions to anonymous or non-admin readers', async () => {
@@ -190,6 +191,7 @@ suite('row-level security policies', () => {
         method: 'PATCH',
         query: `?id=eq.${row.id}`,
         body: { status: 'read' },
+        representation: true,
       });
       const remove = await rest('contact_submissions', {
         token: admin.token,
@@ -197,9 +199,9 @@ suite('row-level security policies', () => {
         query: `?id=eq.${row.id}`,
       });
       expect(read.rows).toHaveLength(1);
-      expect(update.rows).toHaveLength(1);
+      expect(writeAllowed(update)).toBe(true);
       expect((update.rows[0] as { status: string }).status).toBe('read');
-      expect(remove.rows).toHaveLength(1);
+      expect(writeAllowed(remove)).toBe(true);
     });
   });
 
@@ -222,7 +224,7 @@ suite('row-level security policies', () => {
         query: `?id=eq.${member.id}`,
         body: { display_name: 'Renamed By Owner' },
       });
-      expect(res.rows).toHaveLength(1);
+      expect(writeAllowed(res)).toBe(true);
     });
 
     it("blocks updating someone else's profile", async () => {
@@ -323,14 +325,14 @@ suite('row-level security policies', () => {
         method: 'POST',
         body: { user_id: other.id, role: 'editor' },
       });
-      expect(grant.rows).toHaveLength(1);
+      expect(writeAllowed(grant)).toBe(true);
 
       const revoke = await rest('user_roles', {
         token: admin.token,
         method: 'DELETE',
         query: `?user_id=eq.${other.id}&role=eq.editor`,
       });
-      expect(revoke.rows).toHaveLength(1);
+      expect(writeAllowed(revoke)).toBe(true);
     });
   });
 });
