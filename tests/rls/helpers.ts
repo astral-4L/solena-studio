@@ -21,6 +21,8 @@ export type RestResult<T = unknown> = {
   status: number;
   ok: boolean;
   rows: T[];
+  /** rows affected (writes) or matched (reads), from PostgREST's exact count */
+  count: number;
   error: string | null;
 };
 
@@ -33,7 +35,12 @@ type RestOptions = {
   body?: unknown;
   /** e.g. `?id=eq.<uuid>` */
   query?: string;
-  /** ask PostgREST to return affected rows so we can count them */
+  /**
+   * Ask PostgREST to return the affected rows. Off by default: RETURNING is
+   * itself subject to the SELECT policy, so a legitimate insert by a role with
+   * no read access would otherwise look like a policy violation. Row counts come
+   * from `Prefer: count=exact` instead.
+   */
   representation?: boolean;
 };
 
@@ -47,20 +54,21 @@ export async function rest<T = Record<string, unknown>>(
     method = 'GET',
     body,
     query = '',
-    representation = true,
+    representation = false,
   } = opts;
 
   const key = service ? serviceKey : anonKey;
-  const headers: Record<string, string> = {
-    apikey: key,
-    Authorization: `Bearer ${token ?? key}`,
-    'Content-Type': 'application/json',
-  };
-  if (representation && method !== 'GET') headers['Prefer'] = 'return=representation';
+  const prefer = ['count=exact'];
+  if (representation && method !== 'GET') prefer.push('return=representation');
 
   const res = await fetch(`${url}/rest/v1/${table}${query}`, {
     method,
-    headers,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${token ?? key}`,
+      'Content-Type': 'application/json',
+      Prefer: prefer.join(','),
+    },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
 
@@ -72,25 +80,36 @@ export async function rest<T = Record<string, unknown>>(
     parsed = text;
   }
 
+  const range = res.headers.get('content-range');
+  const total = range ? Number.parseInt(range.split('/')[1] ?? '0', 10) : 0;
+
   if (!res.ok) {
     const message =
       parsed && typeof parsed === 'object' && 'message' in parsed
         ? String((parsed as { message: unknown }).message)
         : String(text);
-    return { status: res.status, ok: false, rows: [], error: message };
+    return { status: res.status, ok: false, rows: [], count: 0, error: message };
   }
+
+  const rows = Array.isArray(parsed) ? (parsed as T[]) : parsed ? [parsed as T] : [];
 
   return {
     status: res.status,
     ok: true,
-    rows: Array.isArray(parsed) ? (parsed as T[]) : parsed ? [parsed as T] : [],
+    rows,
+    count: Number.isNaN(total) ? rows.length : total,
     error: null,
   };
 }
 
 /** True when the write was rejected outright OR silently affected zero rows. */
 export function writeBlocked(result: RestResult): boolean {
-  return !result.ok || result.rows.length === 0;
+  return !result.ok || result.count === 0;
+}
+
+/** True when the write was accepted and touched exactly the expected row count. */
+export function writeAllowed(result: RestResult, expected = 1): boolean {
+  return result.ok && result.count === expected;
 }
 
 export type TestUser = {
