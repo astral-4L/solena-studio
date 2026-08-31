@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
 import { Route as GovernanceRouteImport } from './routes/governance'
@@ -39,6 +40,11 @@ const AdminRoute = AdminRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
   '/governance': typeof GovernanceRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
   '/governance': typeof GovernanceRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
   '/governance': typeof GovernanceRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/calendar'
     | '/contact'
     | '/ecosystem'
     | '/governance'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/calendar'
     | '/contact'
     | '/ecosystem'
     | '/governance'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/calendar'
     | '/contact'
     | '/ecosystem'
     | '/governance'
@@ -221,6 +233,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CalendarRoute: typeof CalendarRoute
   ContactRoute: typeof ContactRoute
   EcosystemRoute: typeof EcosystemRoute
   GovernanceRoute: typeof GovernanceRoute
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -370,6 +390,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
+  CalendarRoute: CalendarRoute,
   ContactRoute: ContactRoute,
   EcosystemRoute: EcosystemRoute,
   GovernanceRoute: GovernanceRoute,
