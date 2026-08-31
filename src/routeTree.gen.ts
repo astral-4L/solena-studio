@@ -16,6 +16,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as ThesisRouteImport } from './routes/thesis'
+import { Route as TimelineRouteImport } from './routes/timeline'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminDeploymentRouteImport } from './routes/admin.deployment'
@@ -57,6 +58,11 @@ const JournalRoute = JournalRouteImport.update({
 const ThesisRoute = ThesisRouteImport.update({
   id: '/thesis',
   path: '/thesis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimelineRoute = TimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/ecosystem': typeof EcosystemRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/ecosystem': typeof EcosystemRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/ecosystem': typeof EcosystemRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/ecosystem'
     | '/journal'
     | '/thesis'
+    | '/timeline'
     | '/admin/analytics'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/ecosystem'
     | '/journal'
     | '/thesis'
+    | '/timeline'
     | '/admin/analytics'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/ecosystem'
     | '/journal'
     | '/thesis'
+    | '/timeline'
     | '/admin/analytics'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -201,6 +213,7 @@ export interface RootRouteChildren {
   EcosystemRoute: typeof EcosystemRoute
   JournalRoute: typeof JournalRoute
   ThesisRoute: typeof ThesisRoute
+  TimelineRoute: typeof TimelineRoute
   SectorsSectorRoute: typeof SectorsSectorRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
 }
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/thesis'
       fullPath: '/thesis'
       preLoaderRoute: typeof ThesisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timeline': {
+      id: '/timeline'
+      path: '/timeline'
+      fullPath: '/timeline'
+      preLoaderRoute: typeof TimelineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -334,6 +354,7 @@ const rootRouteChildren: RootRouteChildren = {
   EcosystemRoute: EcosystemRoute,
   JournalRoute: JournalRoute,
   ThesisRoute: ThesisRoute,
+  TimelineRoute: TimelineRoute,
   SectorsSectorRoute: SectorsSectorRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
 }
