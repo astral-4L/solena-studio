@@ -12,10 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
+import { Route as GovernanceRouteImport } from './routes/governance'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as ThesisRouteImport } from './routes/thesis'
+import { Route as TimelineRouteImport } from './routes/timeline'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminDeploymentRouteImport } from './routes/admin.deployment'
@@ -39,6 +42,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -49,6 +57,11 @@ const EcosystemRoute = EcosystemRouteImport.update({
   path: '/ecosystem',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GovernanceRoute = GovernanceRouteImport.update({
+  id: '/governance',
+  path: '/governance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JournalRoute = JournalRouteImport.update({
   id: '/journal',
   path: '/journal',
@@ -57,6 +70,11 @@ const JournalRoute = JournalRouteImport.update({
 const ThesisRoute = ThesisRouteImport.update({
   id: '/thesis',
   path: '/thesis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimelineRoute = TimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -99,10 +117,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
+  '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -114,10 +135,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
+  '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -131,10 +155,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
+  '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
+  '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -149,10 +176,13 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/calendar'
     | '/contact'
     | '/ecosystem'
+    | '/governance'
     | '/journal'
     | '/thesis'
+    | '/timeline'
     | '/admin/analytics'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -164,10 +194,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/calendar'
     | '/contact'
     | '/ecosystem'
+    | '/governance'
     | '/journal'
     | '/thesis'
+    | '/timeline'
     | '/admin/analytics'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -180,10 +213,13 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/calendar'
     | '/contact'
     | '/ecosystem'
+    | '/governance'
     | '/journal'
     | '/thesis'
+    | '/timeline'
     | '/admin/analytics'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -197,10 +233,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CalendarRoute: typeof CalendarRoute
   ContactRoute: typeof ContactRoute
   EcosystemRoute: typeof EcosystemRoute
+  GovernanceRoute: typeof GovernanceRoute
   JournalRoute: typeof JournalRoute
   ThesisRoute: typeof ThesisRoute
+  TimelineRoute: typeof TimelineRoute
   SectorsSectorRoute: typeof SectorsSectorRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
 }
@@ -228,6 +267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -242,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EcosystemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/governance': {
+      id: '/governance'
+      path: '/governance'
+      fullPath: '/governance'
+      preLoaderRoute: typeof GovernanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/journal': {
       id: '/journal'
       path: '/journal'
@@ -254,6 +307,13 @@ declare module '@tanstack/react-router' {
       path: '/thesis'
       fullPath: '/thesis'
       preLoaderRoute: typeof ThesisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timeline': {
+      id: '/timeline'
+      path: '/timeline'
+      fullPath: '/timeline'
+      preLoaderRoute: typeof TimelineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -330,10 +390,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
+  CalendarRoute: CalendarRoute,
   ContactRoute: ContactRoute,
   EcosystemRoute: EcosystemRoute,
+  GovernanceRoute: GovernanceRoute,
   JournalRoute: JournalRoute,
   ThesisRoute: ThesisRoute,
+  TimelineRoute: TimelineRoute,
   SectorsSectorRoute: SectorsSectorRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
 }
