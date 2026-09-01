@@ -10,6 +10,9 @@ const CANVAS_URL =
 const NAV = [
   { to: "/thesis", label: "Thesis" },
   { to: "/ecosystem", label: "Ecosystem" },
+  { to: "/timeline", label: "Timeline" },
+  { to: "/governance", label: "Governance" },
+  { to: "/calendar", label: "Calendar" },
   { to: "/journal", label: "Journal" },
   { to: "/contact", label: "Contact" },
 ] as const;
@@ -63,7 +66,7 @@ export function NavBar() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden gap-8 text-xs uppercase tracking-[0.35em] text-stone/80 md:flex">
+        <nav className="hidden gap-5 text-[0.6rem] uppercase tracking-[0.28em] text-stone/80 md:flex lg:gap-7 lg:text-xs lg:tracking-[0.32em]">
           {NAV.map((n) => (
             <Link
               key={n.to}
@@ -103,13 +106,13 @@ export function NavBar() {
         aria-hidden={!open}
       >
         <div className="absolute inset-0 bg-obsidian/92 backdrop-blur-2xl" onClick={() => setOpen(false)} />
-        <nav className="relative flex h-full flex-col items-start justify-center gap-8 px-10">
+        <nav className="relative flex h-full flex-col items-start justify-center gap-5 px-10">
           {NAV.map((n, i) => (
             <Link
               key={n.to}
               to={n.to}
               onClick={() => setOpen(false)}
-              className="font-display text-3xl font-light tracking-[0.04em] text-ivory/90 transition-colors hover:text-bronze-glow"
+              className="font-display text-2xl font-light tracking-[0.04em] text-ivory/90 transition-colors hover:text-bronze-glow"
               activeProps={{ className: "text-bronze-glow" }}
               style={{
                 opacity: open ? 1 : 0,
@@ -128,7 +131,7 @@ export function NavBar() {
               setOpen(false);
               handleCanvasClick(event);
             }}
-            className="font-display text-3xl font-light tracking-[0.04em] text-ivory/90 transition-colors hover:text-bronze-glow"
+            className="font-display text-2xl font-light tracking-[0.04em] text-ivory/90 transition-colors hover:text-bronze-glow"
             style={{
               opacity: open ? 1 : 0,
               transform: open ? "translateY(0)" : "translateY(8px)",
