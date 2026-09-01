@@ -10,6 +10,9 @@ const CANVAS_URL =
 const NAV = [
   { to: "/thesis", label: "Thesis" },
   { to: "/ecosystem", label: "Ecosystem" },
+  { to: "/timeline", label: "Timeline" },
+  { to: "/governance", label: "Governance" },
+  { to: "/calendar", label: "Calendar" },
   { to: "/journal", label: "Journal" },
   { to: "/contact", label: "Contact" },
 ] as const;
