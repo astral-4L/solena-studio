@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      calendar_entries: {
+        Row: {
+          created_at: string
+          cycle: string
+          format: string
+          id: string
+          note: string
+          sector: string | null
+          sort_order: number
+          status: string
+          title: string
+          updated_at: string
+          window_label: string
+        }
+        Insert: {
+          created_at?: string
+          cycle: string
+          format: string
+          id?: string
+          note?: string
+          sector?: string | null
+          sort_order?: number
+          status?: string
+          title: string
+          updated_at?: string
+          window_label: string
+        }
+        Update: {
+          created_at?: string
+          cycle?: string
+          format?: string
+          id?: string
+          note?: string
+          sector?: string | null
+          sort_order?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          window_label?: string
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
