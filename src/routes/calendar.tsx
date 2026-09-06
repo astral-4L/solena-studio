@@ -240,8 +240,33 @@ function sectorName(slug: string | null) {
 function CalendarPage() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["id"]>("all");
 
+  const live = useQuery({
+    queryKey: ["calendar-entries"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("calendar_entries")
+        .select("id, cycle, window_label, title, format, sector, status, note")
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map(
+        (r): Entry => ({
+          id: r.id,
+          cycle: r.cycle,
+          window: r.window_label,
+          title: r.title,
+          format: r.format,
+          sector: r.sector,
+          status: r.status as Status,
+          note: r.note,
+        }),
+      );
+    },
+  });
+
+  const entries = live.data?.length ? live.data : ENTRIES;
+
   const cycles = useMemo(() => {
-    const visible = ENTRIES.filter(
+    const visible = entries.filter(
       (e) => filter === "all" || e.status === filter,
     );
     const order: string[] = [];
@@ -254,10 +279,10 @@ function CalendarPage() {
       map.get(e.cycle)!.push(e);
     }
     return order.map((cycle) => ({ cycle, entries: map.get(cycle)! }));
-  }, [filter]);
+  }, [filter, entries]);
 
   const publishedShare = Math.round(
-    (ENTRIES.filter((e) => e.status === "published").length / ENTRIES.length) *
+    (entries.filter((e) => e.status === "published").length / entries.length) *
       100,
   );
 
