@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
+import { Route as EditorialRouteImport } from './routes/editorial'
 import { Route as GovernanceRouteImport } from './routes/governance'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as ThesisRouteImport } from './routes/thesis'
@@ -56,6 +57,11 @@ const ContactRoute = ContactRouteImport.update({
 const EcosystemRoute = EcosystemRouteImport.update({
   id: '/ecosystem',
   path: '/ecosystem',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorialRoute = EditorialRouteImport.update({
+  id: '/editorial',
+  path: '/editorial',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GovernanceRoute = GovernanceRouteImport.update({
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
+  '/editorial': typeof EditorialRoute
   '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
+  '/editorial': typeof EditorialRoute
   '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
+  '/editorial': typeof EditorialRoute
   '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/contact'
     | '/ecosystem'
+    | '/editorial'
     | '/governance'
     | '/journal'
     | '/thesis'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/contact'
     | '/ecosystem'
+    | '/editorial'
     | '/governance'
     | '/journal'
     | '/thesis'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/contact'
     | '/ecosystem'
+    | '/editorial'
     | '/governance'
     | '/journal'
     | '/thesis'
@@ -248,6 +260,7 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   ContactRoute: typeof ContactRoute
   EcosystemRoute: typeof EcosystemRoute
+  EditorialRoute: typeof EditorialRoute
   GovernanceRoute: typeof GovernanceRoute
   JournalRoute: typeof JournalRoute
   ThesisRoute: typeof ThesisRoute
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: '/ecosystem'
       fullPath: '/ecosystem'
       preLoaderRoute: typeof EcosystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editorial': {
+      id: '/editorial'
+      path: '/editorial'
+      fullPath: '/editorial'
+      preLoaderRoute: typeof EditorialRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/governance': {
@@ -414,6 +434,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   ContactRoute: ContactRoute,
   EcosystemRoute: EcosystemRoute,
+  EditorialRoute: EditorialRoute,
   GovernanceRoute: GovernanceRoute,
   JournalRoute: JournalRoute,
   ThesisRoute: ThesisRoute,
