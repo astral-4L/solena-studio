@@ -8,6 +8,7 @@
   <url><loc>/calendar</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>/journal</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>/editorial</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>/editorial/michelle</loc></url><url><loc>/editorial/yirui</loc></url><url><loc>/editorial/novy</loc></url><url><loc>/editorial/ulla</loc></url><url><loc>/editorial/kendy</loc></url>
   <url><loc>/contact</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>/sectors/real-estate</loc><priority>0.7</priority></url>
   <url><loc>/sectors/technology</loc><priority>0.7</priority></url>

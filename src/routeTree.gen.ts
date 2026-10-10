@@ -27,6 +27,7 @@ import { Route as AdminDeploymentRouteImport } from './routes/admin.deployment'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as EditorialIndexRouteImport } from './routes/editorial.index'
+import { Route as EditorialDeskRouteImport } from './routes/editorial.$desk'
 import { Route as SectorsSectorRouteImport } from './routes/sectors.$sector'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 
@@ -120,6 +121,11 @@ const EditorialIndexRoute = EditorialIndexRouteImport.update({
   path: '/',
   getParentRoute: () => EditorialRoute,
 } as any)
+const EditorialDeskRoute = EditorialDeskRouteImport.update({
+  id: '/$desk',
+  path: '/$desk',
+  getParentRoute: () => EditorialRoute,
+} as any)
 const SectorsSectorRoute = SectorsSectorRouteImport.update({
   id: '/sectors/$sector',
   path: '/sectors/$sector',
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/editorial/$desk': typeof EditorialDeskRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
   '/editorial/': typeof EditorialIndexRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/editorial/$desk': typeof EditorialDeskRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin': typeof AdminIndexRoute
   '/editorial': typeof EditorialIndexRoute
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/editorial/$desk': typeof EditorialDeskRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
   '/editorial/': typeof EditorialIndexRoute
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
+    | '/editorial/$desk'
     | '/sectors/$sector'
     | '/admin/'
     | '/editorial/'
@@ -235,6 +245,7 @@ export interface FileRouteTypes {
     | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
+    | '/editorial/$desk'
     | '/sectors/$sector'
     | '/admin'
     | '/editorial'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
     | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
+    | '/editorial/$desk'
     | '/sectors/$sector'
     | '/admin/'
     | '/editorial/'
@@ -407,6 +419,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorialIndexRouteImport
       parentRoute: typeof EditorialRoute
     }
+    '/editorial/$desk': {
+      id: '/editorial/$desk'
+      path: '/$desk'
+      fullPath: '/editorial/$desk'
+      preLoaderRoute: typeof EditorialDeskRouteImport
+      parentRoute: typeof EditorialRoute
+    }
     '/sectors/$sector': {
       id: '/sectors/$sector'
       path: '/sectors/$sector'
@@ -445,10 +464,12 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface EditorialRouteChildren {
+  EditorialDeskRoute: typeof EditorialDeskRoute
   EditorialIndexRoute: typeof EditorialIndexRoute
 }
 
 const EditorialRouteChildren: EditorialRouteChildren = {
+  EditorialDeskRoute: EditorialDeskRoute,
   EditorialIndexRoute: EditorialIndexRoute,
 }
 
