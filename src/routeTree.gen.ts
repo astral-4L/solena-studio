@@ -26,6 +26,8 @@ import { Route as AdminCalendarRouteImport } from './routes/admin.calendar'
 import { Route as AdminDeploymentRouteImport } from './routes/admin.deployment'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as EditorialIndexRouteImport } from './routes/editorial.index'
+import { Route as EditorialDeskRouteImport } from './routes/editorial.$desk'
 import { Route as SectorsSectorRouteImport } from './routes/sectors.$sector'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 
@@ -114,6 +116,16 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const EditorialIndexRoute = EditorialIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EditorialRoute,
+} as any)
+const EditorialDeskRoute = EditorialDeskRouteImport.update({
+  id: '/$desk',
+  path: '/$desk',
+  getParentRoute: () => EditorialRoute,
+} as any)
 const SectorsSectorRoute = SectorsSectorRouteImport.update({
   id: '/sectors/$sector',
   path: '/sectors/$sector',
@@ -132,7 +144,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
-  '/editorial': typeof EditorialRoute
+  '/editorial': typeof EditorialRouteWithChildren
   '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
@@ -142,8 +154,10 @@ export interface FileRoutesByFullPath {
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/editorial/$desk': typeof EditorialDeskRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
+  '/editorial/': typeof EditorialIndexRoute
   '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRoutesByTo {
@@ -152,7 +166,6 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
-  '/editorial': typeof EditorialRoute
   '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
@@ -162,8 +175,10 @@ export interface FileRoutesByTo {
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/editorial/$desk': typeof EditorialDeskRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin': typeof AdminIndexRoute
+  '/editorial': typeof EditorialIndexRoute
   '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRoutesById {
@@ -174,7 +189,7 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/contact': typeof ContactRoute
   '/ecosystem': typeof EcosystemRoute
-  '/editorial': typeof EditorialRoute
+  '/editorial': typeof EditorialRouteWithChildren
   '/governance': typeof GovernanceRoute
   '/journal': typeof JournalRoute
   '/thesis': typeof ThesisRoute
@@ -184,8 +199,10 @@ export interface FileRoutesById {
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/editorial/$desk': typeof EditorialDeskRoute
   '/sectors/$sector': typeof SectorsSectorRoute
   '/admin/': typeof AdminIndexRoute
+  '/editorial/': typeof EditorialIndexRoute
   '/api/public/health': typeof ApiPublicHealthRoute
 }
 export interface FileRouteTypes {
@@ -207,8 +224,10 @@ export interface FileRouteTypes {
     | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
+    | '/editorial/$desk'
     | '/sectors/$sector'
     | '/admin/'
+    | '/editorial/'
     | '/api/public/health'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -217,7 +236,6 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/contact'
     | '/ecosystem'
-    | '/editorial'
     | '/governance'
     | '/journal'
     | '/thesis'
@@ -227,8 +245,10 @@ export interface FileRouteTypes {
     | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
+    | '/editorial/$desk'
     | '/sectors/$sector'
     | '/admin'
+    | '/editorial'
     | '/api/public/health'
   id:
     | '__root__'
@@ -248,8 +268,10 @@ export interface FileRouteTypes {
     | '/admin/deployment'
     | '/admin/submissions'
     | '/admin/users'
+    | '/editorial/$desk'
     | '/sectors/$sector'
     | '/admin/'
+    | '/editorial/'
     | '/api/public/health'
   fileRoutesById: FileRoutesById
 }
@@ -260,7 +282,7 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   ContactRoute: typeof ContactRoute
   EcosystemRoute: typeof EcosystemRoute
-  EditorialRoute: typeof EditorialRoute
+  EditorialRoute: typeof EditorialRouteWithChildren
   GovernanceRoute: typeof GovernanceRoute
   JournalRoute: typeof JournalRoute
   ThesisRoute: typeof ThesisRoute
@@ -390,6 +412,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/editorial/': {
+      id: '/editorial/'
+      path: '/'
+      fullPath: '/editorial/'
+      preLoaderRoute: typeof EditorialIndexRouteImport
+      parentRoute: typeof EditorialRoute
+    }
+    '/editorial/$desk': {
+      id: '/editorial/$desk'
+      path: '/$desk'
+      fullPath: '/editorial/$desk'
+      preLoaderRoute: typeof EditorialDeskRouteImport
+      parentRoute: typeof EditorialRoute
+    }
     '/sectors/$sector': {
       id: '/sectors/$sector'
       path: '/sectors/$sector'
@@ -427,6 +463,20 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface EditorialRouteChildren {
+  EditorialDeskRoute: typeof EditorialDeskRoute
+  EditorialIndexRoute: typeof EditorialIndexRoute
+}
+
+const EditorialRouteChildren: EditorialRouteChildren = {
+  EditorialDeskRoute: EditorialDeskRoute,
+  EditorialIndexRoute: EditorialIndexRoute,
+}
+
+const EditorialRouteWithChildren = EditorialRoute._addFileChildren(
+  EditorialRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -434,7 +484,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   ContactRoute: ContactRoute,
   EcosystemRoute: EcosystemRoute,
-  EditorialRoute: EditorialRoute,
+  EditorialRoute: EditorialRouteWithChildren,
   GovernanceRoute: GovernanceRoute,
   JournalRoute: JournalRoute,
   ThesisRoute: ThesisRoute,

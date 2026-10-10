@@ -456,7 +456,7 @@ export const Route = createFileRoute("/sectors/$sector")({
     <div className="flex min-h-screen items-center justify-center bg-obsidian text-ivory">
       <div className="text-center">
         <p className="eyebrow mb-4">Disturbance</p>
-        <p className="font-display text-2xl">{error.message}</p>
+        <p className="font-display text-2xl">{error instanceof Error ? error.message : "Something went wrong"}</p>
         <button onClick={reset} className="bronze-line mt-8 text-sm uppercase tracking-[0.4em]">
           Retry
         </button>
