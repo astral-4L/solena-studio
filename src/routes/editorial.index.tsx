@@ -318,6 +318,7 @@ function EditorialPage() {
         </div>
 
         <section
+          id="ed-contact"
           data-zone="ed-contact"
           data-section="ed-contact"
           data-section-label="Reach a desk"
