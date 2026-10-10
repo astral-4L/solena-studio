@@ -59,7 +59,7 @@ type Member = {
   sectors: { slug: string; label: string }[];
 };
 
-export const MEMBERS: Member[] = [
+const MEMBERS: Member[] = [
   {
     id: "ed-michelle",
     code: "DESK 01",
