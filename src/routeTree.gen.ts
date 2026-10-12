@@ -22,6 +22,7 @@ import { Route as ThesisRouteImport } from './routes/thesis'
 import { Route as TimelineRouteImport } from './routes/timeline'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminBriefsRouteImport } from './routes/admin.briefs'
 import { Route as AdminCalendarRouteImport } from './routes/admin.calendar'
 import { Route as AdminDeploymentRouteImport } from './routes/admin.deployment'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
@@ -96,6 +97,11 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBriefsRoute = AdminBriefsRouteImport.update({
+  id: '/briefs',
+  path: '/briefs',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCalendarRoute = AdminCalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/thesis': typeof ThesisRoute
   '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/briefs': typeof AdminBriefsRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/thesis': typeof ThesisRoute
   '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/briefs': typeof AdminBriefsRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/thesis': typeof ThesisRoute
   '/timeline': typeof TimelineRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/briefs': typeof AdminBriefsRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/deployment': typeof AdminDeploymentRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -220,6 +229,7 @@ export interface FileRouteTypes {
     | '/thesis'
     | '/timeline'
     | '/admin/analytics'
+    | '/admin/briefs'
     | '/admin/calendar'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/thesis'
     | '/timeline'
     | '/admin/analytics'
+    | '/admin/briefs'
     | '/admin/calendar'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/thesis'
     | '/timeline'
     | '/admin/analytics'
+    | '/admin/briefs'
     | '/admin/calendar'
     | '/admin/deployment'
     | '/admin/submissions'
@@ -384,6 +396,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/briefs': {
+      id: '/admin/briefs'
+      path: '/briefs'
+      fullPath: '/admin/briefs'
+      preLoaderRoute: typeof AdminBriefsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/calendar': {
       id: '/admin/calendar'
       path: '/calendar'
@@ -445,6 +464,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminBriefsRoute: typeof AdminBriefsRoute
   AdminCalendarRoute: typeof AdminCalendarRoute
   AdminDeploymentRoute: typeof AdminDeploymentRoute
   AdminSubmissionsRoute: typeof AdminSubmissionsRoute
@@ -454,6 +474,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminBriefsRoute: AdminBriefsRoute,
   AdminCalendarRoute: AdminCalendarRoute,
   AdminDeploymentRoute: AdminDeploymentRoute,
   AdminSubmissionsRoute: AdminSubmissionsRoute,
